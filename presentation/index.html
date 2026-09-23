@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=3">
+  <link rel="stylesheet" href="style.css?v=4">
 </head>
 <body class="dark-theme">
   <!-- Top Bar -->
@@ -417,7 +417,7 @@
       </section>
 
       <!-- SLIDE 9: LIVE SIMULATOR DEMONSTRATION -->
-      <section class="slide" id="slide-9" data-title="Live Working Demo (Simulator)">
+      <section class="slide demo-slide-container" id="slide-9" data-title="Live Working Demo (Simulator)">
         <div class="slide-content demo-slide">
           <div class="demo-header">
             <div>
@@ -425,7 +425,7 @@
               <h2 class="slide-heading">Interactive Wokwi & ThingsBoard Simulator</h2>
             </div>
             <div class="demo-status-pill">
-              <span class="live-pulse"></span> SYSTEM STATUS: <span id="simStatusText">ONLINE / RUNNING</span>
+              <span class="live-pulse"></span> <span class="status-label-full">SYSTEM STATUS:</span> <span id="simStatusText">ONLINE / RUNNING</span>
             </div>
           </div>
 
@@ -442,31 +442,37 @@
               <div class="sim-controls-grid">
                 <!-- Plug In / Out Buttons -->
                 <div class="control-card">
-                  <div class="ctrl-label">EV Physical Connection</div>
+                  <div class="ctrl-label"><span>EV Physical Connection</span></div>
                   <div class="btn-group">
-                    <button id="simBtnPlugin" class="btn btn-plugin">🟢 Plug In EV (GPIO 32)</button>
-                    <button id="simBtnPlugout" class="btn btn-plugout">🔴 Plug Out EV (GPIO 33)</button>
+                    <button id="simBtnPlugin" class="btn btn-plugin" title="Simulate EV Cable Plug-In">
+                      <span class="label-full">🟢 Plug In EV (GPIO 32)</span>
+                      <span class="label-short">🟢 Plug In</span>
+                    </button>
+                    <button id="simBtnPlugout" class="btn btn-plugout" title="Simulate EV Cable Disconnect">
+                      <span class="label-full">🔴 Plug Out EV (GPIO 33)</span>
+                      <span class="label-short">🔴 Plug Out</span>
+                    </button>
                   </div>
                   <div class="bay-badge" id="simBayStateBadge">STATE: FREE</div>
                 </div>
 
                 <!-- Voltage Potentiometer Slider -->
                 <div class="control-card">
-                  <div class="ctrl-label">Voltage Sensor POT (GPIO 34): <span id="voltValDisplay">230.0 V</span></div>
+                  <div class="ctrl-label"><span>Voltage POT (GPIO 34)</span> <span id="voltValDisplay">230.0 V</span></div>
                   <input type="range" id="simVoltSlider" min="0" max="250" value="230" step="1" class="slider slider-volt">
                   <div class="slider-ticks"><span>0 V</span><span>120 V</span><span>230 V</span><span>250 V</span></div>
                 </div>
 
                 <!-- Current Potentiometer Slider -->
                 <div class="control-card">
-                  <div class="ctrl-label">Current Sensor ACS712 POT (GPIO 35): <span id="currValDisplay">14.0 A</span></div>
+                  <div class="ctrl-label"><span>Current POT (GPIO 35)</span> <span id="currValDisplay">14.0 A</span></div>
                   <input type="range" id="simCurrSlider" min="0" max="32" value="14" step="0.5" class="slider slider-curr">
                   <div class="slider-ticks"><span>0 A</span><span>10 A</span><span class="warn-tick">16 A (Limit)</span><span>32 A</span></div>
                 </div>
 
                 <!-- DHT22 Temp Slider -->
                 <div class="control-card">
-                  <div class="ctrl-label">DHT22 Ambient Temp (GPIO 15): <span id="tempValDisplay">27.0 °C</span></div>
+                  <div class="ctrl-label"><span>Ambient Temp (GPIO 15)</span> <span id="tempValDisplay">27.0 °C</span></div>
                   <input type="range" id="simTempSlider" min="15" max="60" value="27" step="0.5" class="slider slider-temp">
                   <div class="slider-ticks"><span>15 °C</span><span>27 °C</span><span>45 °C</span><span>60 °C</span></div>
                 </div>
@@ -476,15 +482,15 @@
               <div class="actuators-bar">
                 <div class="actuator-item">
                   <div class="led-bulb led-green" id="simLedGreen"></div>
-                  <span>Green LED (Free)</span>
+                  <span>Green (Free)</span>
                 </div>
                 <div class="actuator-item">
                   <div class="led-bulb led-yellow" id="simLedYellow"></div>
-                  <span>Yellow LED (Charging)</span>
+                  <span>Yellow (Charging)</span>
                 </div>
                 <div class="actuator-item">
                   <div class="led-bulb led-red" id="simLedRed"></div>
-                  <span>Red LED (Fault/Overload)</span>
+                  <span>Red (Fault)</span>
                 </div>
                 <div class="actuator-item">
                   <div class="relay-switch" id="simRelayVisual">
@@ -593,6 +599,6 @@
     </div>
   </main>
 
-  <script src="app.js?v=3"></script>
+  <script src="app.js?v=4"></script>
 </body>
 </html>
