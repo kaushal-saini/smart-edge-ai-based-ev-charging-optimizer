@@ -209,6 +209,51 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // -------------------------------------------------------------------
+  // Mobile Touch Gestures (Swipe Left / Swipe Right)
+  // -------------------------------------------------------------------
+  const slideViewport = document.querySelector(".slide-viewport");
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let touchEndX = 0;
+  let touchEndY = 0;
+
+  if (slideViewport) {
+    slideViewport.addEventListener("touchstart", (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+
+    slideViewport.addEventListener("touchend", (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      touchEndY = e.changedTouches[0].screenY;
+      handleGesture(e);
+    }, { passive: true });
+  }
+
+  function handleGesture(e) {
+    // Avoid triggering slide swipe if user was dragging a slider on the simulator
+    if (e.target && (e.target.type === "range" || e.target.closest(".sim-panel") || e.target.closest("button") || e.target.closest("input"))) {
+      return;
+    }
+
+    const diffX = touchEndX - touchStartX;
+    const diffY = touchEndY - touchStartY;
+
+    // Check if horizontal swipe is significantly stronger than vertical scroll
+    if (Math.abs(diffX) > 50 && Math.abs(diffX) > Math.abs(diffY) * 1.5) {
+      if (diffX < 0) {
+        // Swiped Left -> Next Slide
+        stopAutoPlay();
+        showSlide(currentSlideIndex + 1, false);
+      } else {
+        // Swiped Right -> Prev Slide
+        stopAutoPlay();
+        showSlide(currentSlideIndex - 1, false);
+      }
+    }
+  }
+
   muteNarrationBtn.addEventListener("click", () => {
     isMuted = !isMuted;
     muteNarrationBtn.classList.toggle("muted", isMuted);
