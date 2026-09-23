@@ -1,8 +1,29 @@
 # Smart EV Charging Station Optimizer (Edge AI + IoT)
 
-A smart, multi-bay Electric Vehicle (EV) charging station optimizer powered by **ESP32**, **Edge AI inference**, **MQTT**, and **ThingsBoard**.
+A smart, multi-bay Electric Vehicle (EV) charging station optimizer powered by **ESP32**, **Embedded Edge AI inference**, **MQTT**, and **ThingsBoard**.
 
 This system autonomously monitors charging bay electrical parameters, predicts short-term EV arrival demand and session duration on-device, optimizes charger allocation/throttling to prevent power grid overloads and reduce peak-tariff costs, and connects seamlessly to ThingsBoard for real-time monitoring, telemetry logging, alarms, and remote RPC control.
+
+---
+
+## 🎬 Oral Presentation & Video Walkthrough
+
+- 🌐 **Live Interactive Presentation & Simulator App:** [https://kaushal-saini.github.io/smart-edge-ai-based-ev-charging-optimizer/](https://kaushal-saini.github.io/smart-edge-ai-based-ev-charging-optimizer/)
+- 📹 **Recorded MP4 Video File:** Available in the repository as [`presentation_video.mp4`](./presentation_video.mp4) (ready to upload/view on YouTube).
+
+---
+
+## 🖼️ Working Model Structure & Simulation Circuit
+
+### 1. Hardware Circuit Schematic (`Diagram.json`)
+The simulated hardware circuit connects the ESP32 to analog sensors, push buttons, status indicators, and the charger relay:
+
+![Wokwi Simulation Circuit Diagram](assets/circuit_layout.png)
+
+### 2. Live Interactive Simulator & ThingsBoard Dashboard
+Real-time hardware control panel and cloud telemetry synchronization:
+
+![Live Simulator Dashboard](assets/live_simulator_dashboard.png)
 
 ---
 
@@ -134,35 +155,37 @@ Dynamic cloud configuration without reflashing:
 
 ### 1. Build Firmware with PlatformIO
 ```bash
-# Navigate to project or run PlatformIO
+# In project folder:
 pio run -d esp32_blink
 ```
 
 ### 2. Run Wokwi Simulation
 - In VS Code with the **Wokwi Simulator** extension installed:
   1. Open `Diagram.json` or press `F1` -> `Wokwi: Start Simulator`.
-  2. The simulation will boot the compiled binary, connect to simulated WiFi (`Wokwi-GUEST`), and begin streaming to ThingsBoard.
-- Interact with:
-  - **Green Button (GPIO 32)**: Plug in EV.
-  - **Red Button (GPIO 33)**: Plug out EV.
-  - **Potentiometers**: Adjust Voltage (GPIO 34) and Current (GPIO 35).
-  - **DHT22**: Adjust temperature slider.
+  2. The simulation boots the compiled binary, connects to simulated WiFi (`Wokwi-GUEST`), and begins streaming to ThingsBoard.
 
 ### 3. Configure ThingsBoard
 1. Create a device in ThingsBoard (e.g. `BAY1`).
 2. Copy the **Device Access Token** into `esp32_blink/src/config.cpp` (`TB_TOKEN`).
 3. Build and run the simulation.
-4. Import/configure Dashboard widgets for gauges, time-series charts, and RPC override buttons.
 
 ---
 
 ## 📁 Repository Structure
 
 ```
-iot_project/
+smart-edge-ai-based-ev-charging-optimizer/
 ├── Diagram.json               # Wokwi simulation circuit layout
 ├── wokwi.toml                 # Wokwi simulation configuration
-├── README.md                  # Project documentation
+├── README.md                  # Project documentation & screenshots
+├── index.html                 # Root redirect for GitHub Pages deployment
+├── assets/                    # Circuit schematics and simulator screenshots
+│   ├── circuit_layout.png
+│   └── live_simulator_dashboard.png
+├── presentation/              # Interactive Presentation Slide Deck Web App
+│   ├── index.html
+│   ├── style.css
+│   └── app.js
 ├── ai_training/               # Edge AI offline training pipeline
 │   ├── generate_dataset.py    # Synthetic dataset generator
 │   ├── train_models.py        # Scikit-learn model trainer & C exporter
