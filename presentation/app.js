@@ -35,7 +35,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   totalSlidesNum.textContent = totalSlides;
 
-  function showSlide(index) {
+  // Speech Synthesis & Auto-Play Controller
+  let currentUtterance = null;
+  let slideAdvanceTimeout = null;
+
+  function showSlide(index, autoAdvanceAfterSpeech = false) {
     if (index < 0) index = 0;
     if (index >= totalSlides) index = totalSlides - 1;
     currentSlideIndex = index;
@@ -48,38 +52,85 @@ document.addEventListener("DOMContentLoaded", () => {
     prevBtn.disabled = currentSlideIndex === 0;
     nextBtn.disabled = currentSlideIndex === totalSlides - 1;
 
-    // Update Narration
+    // Update Narration & Speech
     const text = narrations[currentSlideIndex] || "";
     narratorText.textContent = text;
-    speakNarration(text);
+    
+    speakNarration(text, () => {
+      // Called when speech finishes
+      if (isAutoPlaying && autoAdvanceAfterSpeech) {
+        if (currentSlideIndex < totalSlides - 1) {
+          // Pause 1.5 seconds after audio finishes before advancing to next slide
+          slideAdvanceTimeout = setTimeout(() => {
+            if (isAutoPlaying) {
+              showSlide(currentSlideIndex + 1, true);
+            }
+          }, 1500);
+        } else {
+          // Reached end of presentation
+          stopAutoPlay();
+        }
+      }
+    });
   }
 
-  function speakNarration(text) {
-    if (isMuted || !("speechSynthesis" in window)) return;
-    window.speechSynthesis.cancel();
+  function speakNarration(text, onComplete) {
+    clearTimeout(slideAdvanceTimeout);
+    
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel(); // Stop previous audio
+    }
+
+    if (isMuted || !("speechSynthesis" in window)) {
+      // Fallback timer based on reading speed (~3.5 words per sec)
+      if (onComplete) {
+        const words = text.split(" ").length;
+        const fallbackDurationMs = Math.max(4000, (words / 3.2) * 1000);
+        slideAdvanceTimeout = setTimeout(() => {
+          onComplete();
+        }, fallbackDurationMs);
+      }
+      return;
+    }
+
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 1.05;
+    utterance.rate = 1.0;
     utterance.pitch = 1.0;
+    currentUtterance = utterance;
+
+    utterance.onend = () => {
+      if (onComplete) onComplete();
+    };
+
+    utterance.onerror = (e) => {
+      console.warn("Speech error or cancelled:", e);
+      if (onComplete) onComplete();
+    };
+
     window.speechSynthesis.speak(utterance);
   }
 
   prevBtn.addEventListener("click", () => {
     stopAutoPlay();
-    showSlide(currentSlideIndex - 1);
+    showSlide(currentSlideIndex - 1, false);
   });
 
   nextBtn.addEventListener("click", () => {
     stopAutoPlay();
-    showSlide(currentSlideIndex + 1);
+    showSlide(currentSlideIndex + 1, false);
   });
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "ArrowLeft") {
       stopAutoPlay();
-      showSlide(currentSlideIndex - 1);
-    } else if (e.key === "ArrowRight" || e.key === " ") {
+      showSlide(currentSlideIndex - 1, false);
+    } else if (e.key === "ArrowRight") {
       stopAutoPlay();
-      showSlide(currentSlideIndex + 1);
+      showSlide(currentSlideIndex + 1, false);
+    } else if (e.key === " ") {
+      // Spacebar toggles play/pause
+      e.preventDefault();
+      toggleAutoPlay();
     }
   });
 
@@ -89,7 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (isMuted && "speechSynthesis" in window) {
       window.speechSynthesis.cancel();
     } else if (!isMuted) {
-      speakNarration(narrations[currentSlideIndex]);
+      speakNarration(narrations[currentSlideIndex], null);
     }
   });
 
@@ -97,39 +148,38 @@ document.addEventListener("DOMContentLoaded", () => {
     isAutoPlaying = true;
     autoPlayBtn.textContent = "⏸️ Pause Presentation";
     autoPlayBtn.classList.replace("btn-primary", "btn-secondary");
-
-    function playNext() {
-      if (!isAutoPlaying) return;
-      if (currentSlideIndex < totalSlides - 1) {
-        showSlide(currentSlideIndex + 1);
-        autoPlayTimer = setTimeout(playNext, 12000);
-      } else {
-        stopAutoPlay();
-      }
-    }
-    autoPlayTimer = setTimeout(playNext, 10000);
+    showSlide(currentSlideIndex, true);
   }
 
   function stopAutoPlay() {
     isAutoPlaying = false;
-    clearTimeout(autoPlayTimer);
-    autoPlayBtn.textContent = "🎙️ Start Oral Presentation";
+    clearTimeout(slideAdvanceTimeout);
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+    autoPlayBtn.textContent = currentSlideIndex >= totalSlides - 1 
+      ? "🎙️ Restart Oral Presentation" 
+      : "▶️ Resume Oral Presentation";
     autoPlayBtn.classList.replace("btn-secondary", "btn-primary");
   }
 
-  autoPlayBtn.addEventListener("click", () => {
+  function toggleAutoPlay() {
     if (isAutoPlaying) {
       stopAutoPlay();
     } else {
-      if (currentSlideIndex === totalSlides - 1) {
-        showSlide(0);
+      if (currentSlideIndex >= totalSlides - 1) {
+        currentSlideIndex = 0;
       }
       startAutoPlay();
     }
+  }
+
+  autoPlayBtn.addEventListener("click", () => {
+    toggleAutoPlay();
   });
 
-  // Initialize first slide
-  showSlide(0);
+  // Initialize first slide on load (audio does not auto-advance until user clicks start)
+  showSlide(0, false);
 
   // -------------------------------------------------------------------
   // Interactive Simulator Engine (ESP32 + Edge AI + Optimization + TB)
