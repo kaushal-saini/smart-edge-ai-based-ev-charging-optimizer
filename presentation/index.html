@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart EV Charging Station Optimizer - Internship Presentation & Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-theme">
+  <!-- Top Bar -->
+  <header class="top-nav">
+    <div class="brand">
+      <div class="logo-icon">⚡</div>
+      <div class="brand-text">
+        <span class="brand-title">Edge AI EV Charging Optimizer</span>
+        <span class="brand-sub">Internship Capstone Presentation</span>
+      </div>
+    </div>
+
+    <div class="slide-nav-controls">
+      <button id="prevBtn" class="btn btn-secondary" title="Previous Slide (Left Arrow)">◀ Prev</button>
+      <div class="slide-indicator">
+        <span id="currentSlideNum">1</span> / <span id="totalSlidesNum">9</span>
+      </div>
+      <button id="nextBtn" class="btn btn-secondary" title="Next Slide (Right Arrow)">Next ▶</button>
+      <button id="autoPlayBtn" class="btn btn-primary" title="Start Automated Oral Presentation">🎙️ Start Oral Presentation</button>
+    </div>
+  </header>
+
+  <!-- Main Presentation Container -->
+  <main class="presentation-wrapper">
+    <!-- Slide Viewport -->
+    <div class="slide-viewport">
+
+      <!-- SLIDE 1: TITLE / INTRO -->
+      <section class="slide active" id="slide-1" data-title="Project Introduction">
+        <div class="slide-content title-slide">
+          <div class="badge-pill">🎓 IoT & Edge AI Engineering Internship Project</div>
+          <h1 class="main-title">Smart EV Charging Station Optimizer</h1>
+          <h2 class="sub-title">Autonomous On-Device Load Balancing, Predictive Demand Inference & Cloud Telemetry</h2>
+          <div class="tech-tags">
+            <span class="tech-tag"><span class="dot esp"></span> ESP32 (WROOM-32)</span>
+            <span class="tech-tag"><span class="dot ml"></span> Edge AI (C/C++ Embedded)</span>
+            <span class="tech-tag"><span class="dot mqtt"></span> MQTT Protocol</span>
+            <span class="tech-tag"><span class="dot tb"></span> ThingsBoard IoT Cloud</span>
+            <span class="tech-tag"><span class="dot wokwi"></span> Wokwi Simulation</span>
+          </div>
+
+          <div class="speaker-card">
+            <div class="speaker-avatar">👨‍💻</div>
+            <div class="speaker-info">
+              <h4>Oral Presentation & Internship Summary</h4>
+              <p>Covering system architecture, firmware design, machine learning integration, optimization algorithms, and live simulator demonstration.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2: PROBLEM STATEMENT -->
+      <section class="slide" id="slide-2" data-title="Problem Statement & Industry Context">
+        <div class="slide-content">
+          <div class="section-label">01 // Problem Statement & Motivation</div>
+          <h2 class="slide-heading">The Real-World EV Charging Dilemma</h2>
+          
+          <div class="grid-2-col">
+            <div class="card card-glow-red">
+              <div class="card-icon">⚠️</div>
+              <h3>Current Unmanaged Charging Challenges</h3>
+              <ul class="feature-list">
+                <li><strong>Grid Overload & Power Spikes:</strong> Multiple EVs plugging in simultaneously exceed local transformer capacity.</li>
+                <li><strong>High Peak-Tariff Costs:</strong> Charging during expensive peak-hour tariff schedules drives up operational expenditure.</li>
+                <li><strong>No Predictive Analytics:</strong> Station operators have zero forecast of incoming vehicles or remaining session durations.</li>
+                <li><strong>Unbalanced Bay Utilization:</strong> First-come-first-served allocation creates bottleneck delays and uneven charger wear.</li>
+              </ul>
+            </div>
+
+            <div class="card card-glow-green">
+              <div class="card-icon">💡</div>
+              <h3>Our Edge AI + IoT Solution</h3>
+              <ul class="feature-list">
+                <li><strong>Autonomous Edge Intelligence:</strong> Microcontroller executes lightweight ML locally for zero-latency decisions.</li>
+                <li><strong>Dynamic Power Throttling:</strong> Time-sliced PWM duty-cycling limits load without tripping circuit breakers.</li>
+                <li><strong>Cost-Aware Off-Peak Scheduling:</strong> Deferral logic delays non-urgent charging during peak tariff periods.</li>
+                <li><strong>End-to-End Cloud Observability:</strong> Full real-time telemetry, remote RPC overrides, and instant alarms via ThingsBoard.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 3: SYSTEM ARCHITECTURE -->
+      <section class="slide" id="slide-3" data-title="3-Layer System Architecture">
+        <div class="slide-content">
+          <div class="section-label">02 // System Architecture</div>
+          <h2 class="slide-heading">3-Layer Distributed Architecture</h2>
+          
+          <div class="arch-diagram">
+            <div class="arch-layer arch-edge">
+              <div class="layer-header">
+                <span class="layer-num">LAYER 1</span>
+                <h3>Edge Computing Layer (ESP32 Node)</h3>
+              </div>
+              <div class="layer-body">
+                <div class="layer-item">
+                  <div class="icon">🔌</div>
+                  <div><strong>Sensors & Inputs:</strong> Voltage ADC (0-250V), Current ACS712 (0-32A), DHT22 Temp, Plug-In/Out Buttons</div>
+                </div>
+                <div class="layer-item">
+                  <div class="icon">🧠</div>
+                  <div><strong>Edge AI Engine:</strong> Embedded Logistic Regression & Decision Tree models in <code>model.h</code></div>
+                </div>
+                <div class="layer-item">
+                  <div class="icon">⚙️</div>
+                  <div><strong>Local Optimization:</strong> Priority throttling, power cap checks, relay PWM duty-cycle & LED status</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="arch-connector">
+              <div class="arrow-down">⬇️</div>
+              <span class="protocol-badge">MQTT v3.1.1 (Port 1883) JSON Payloads</span>
+              <div class="arrow-up">⬆️</div>
+            </div>
+
+            <div class="arch-layer arch-cloud">
+              <div class="layer-header">
+                <span class="layer-num">LAYER 2 & 3</span>
+                <h3>Communication & ThingsBoard Cloud Layer</h3>
+              </div>
+              <div class="layer-body">
+                <div class="layer-item">
+                  <div class="icon">📡</div>
+                  <div><strong>Telemetry Endpoint:</strong> <code>v1/devices/me/telemetry</code> (5s sampling interval)</div>
+                </div>
+                <div class="layer-item">
+                  <div class="icon">🎛️</div>
+                  <div><strong>Shared Attributes:</strong> Dynamic threshold updates (<code>maxStationLoadW</code>, <code>overloadCurrentA</code>)</div>
+                </div>
+                <div class="layer-item">
+                  <div class="icon">⚡</div>
+                  <div><strong>Remote RPC & Rules:</strong> <code>setRelayState</code>, <code>setThrottle</code>, Overload & Inactivity Alarms</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: HARDWARE & CIRCUIT DESIGN -->
+      <section class="slide" id="slide-4" data-title="Hardware & Simulation Circuit">
+        <div class="slide-content">
+          <div class="section-label">03 // Circuit & Hardware Design</div>
+          <h2 class="slide-heading">Wokwi Simulation Hardware Wiring</h2>
+
+          <div class="grid-2-col">
+            <div class="pinout-table-card">
+              <table class="styled-table">
+                <thead>
+                  <tr>
+                    <th>Component</th>
+                    <th>ESP32 GPIO</th>
+                    <th>Function & Range</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Voltage Potentiometer</strong></td>
+                    <td><span class="pin-badge">GPIO 34</span></td>
+                    <td>Simulates supply voltage (0 – 250 V)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Current Potentiometer</strong></td>
+                    <td><span class="pin-badge">GPIO 35</span></td>
+                    <td>Simulates charging current (0 – 32.0 A)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>DHT22 Sensor</strong></td>
+                    <td><span class="pin-badge">GPIO 15</span></td>
+                    <td>Charger/ambient temperature monitoring</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Plug-In Push Button</strong></td>
+                    <td><span class="pin-badge">GPIO 32</span></td>
+                    <td>Triggers <code>FREE → CHARGING</code> transition</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Plug-Out Push Button</strong></td>
+                    <td><span class="pin-badge">GPIO 33</span></td>
+                    <td>Triggers <code>CHARGING → FREE</code> transition</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Status LEDs (G / Y / R)</strong></td>
+                    <td><span class="pin-badge">18 / 19 / 21</span></td>
+                    <td>Green: Free | Yellow: Charging | Red: Fault</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Power Relay Module</strong></td>
+                    <td><span class="pin-badge">GPIO 26</span></td>
+                    <td>Switches charging power (PWM duty-cycle)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="card card-glow-blue">
+              <div class="card-icon">⚡</div>
+              <h3>Key Hardware Engineering Features</h3>
+              <ul class="feature-list">
+                <li><strong>Hardware Input Debouncing:</strong> 200ms software lockout prevents spurious contact bounce on plug-in/out triggers.</li>
+                <li><strong>Safe Sensor Scaling:</strong> Dual linear mapping function converts ADC values (0–4095) with zero floating-point overflow.</li>
+                <li><strong>Trapezoidal Energy Accumulator:</strong> Real-time numerical integration computes cumulative kilowatt-hours ($Wh = \sum P \cdot \Delta t$).</li>
+                <li><strong>PWM Relay Throttling:</strong> Modulates charging power over a 2000ms duty-cycle window when throttled to 50% or 70%.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: EDGE AI MODEL TRAINING -->
+      <section class="slide" id="slide-5" data-title="Edge AI Machine Learning">
+        <div class="slide-content">
+          <div class="section-label">04 // Edge Artificial Intelligence</div>
+          <h2 class="slide-heading">Lightweight Embedded On-Device Inference</h2>
+
+          <div class="grid-3-col">
+            <div class="card">
+              <div class="card-icon">📊</div>
+              <h3>1. Feature Extraction</h3>
+              <p>Constructed every 5s from onboard sensors and clock:</p>
+              <ul class="mini-list">
+                <li><code>hourOfDay</code> (0–23)</li>
+                <li><code>dayOfWeek</code> (0–6)</li>
+                <li><code>bayOccupied</code> (0/1)</li>
+                <li><code>recentAvgCurrent</code> (10-sample rolling avg)</li>
+                <li><code>sessionElapsedMin</code> (active duration)</li>
+                <li><code>historicalArrivalRate</code> (commute profile)</li>
+              </ul>
+            </div>
+
+            <div class="card card-glow-cyan">
+              <div class="card-icon">🎯</div>
+              <h3>2. Arrival Probability</h3>
+              <p><strong>Logistic Regression:</strong></p>
+              <div class="code-box">
+                <code>P(arrival) = &sigma;(&sum; w<sub>i</sub>x<sub>i</sub> + b)</code>
+              </div>
+              <p>Predicts probability ($0.0 \to 1.0$) of a new EV arriving in the next 30 minutes. Trained with scikit-learn, evaluated at <strong>72.6% accuracy (0.767 ROC-AUC)</strong>.</p>
+            </div>
+
+            <div class="card card-glow-purple">
+              <div class="card-icon">⏱️</div>
+              <h3>3. Session Duration</h3>
+              <p><strong>Decision Tree Regressor:</strong></p>
+              <div class="code-box">
+                <code>Max Depth = 5</code>
+              </div>
+              <p>Predicts remaining charging time in minutes based on battery capacity, initial arrival SoC, and rolling current rate. Fully converted to static C header <code>model.h</code>.</p>
+            </div>
+          </div>
+
+          <div class="banner-box">
+            💡 <strong>Zero Cloud Overhead:</strong> Inference runs in under <strong>5 ms</strong> on the ESP32 CPU with <strong>zero TensorFlow runtime overhead</strong>, taking less than 14% RAM!
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: LOCAL OPTIMIZATION -->
+      <section class="slide" id="slide-6" data-title="Optimization & Control Logic">
+        <div class="slide-content">
+          <div class="section-label">05 // Autonomous Control Logic</div>
+          <h2 class="slide-heading">Local Allocation & Grid Overload Management</h2>
+
+          <div class="grid-2-col">
+            <div class="logic-flow-card">
+              <div class="flow-step danger">
+                <div class="step-badge">CONDITION 1</div>
+                <div class="step-text">
+                  <strong>Overcurrent Detection:</strong> <code>current > overloadCurrentA (16A)</code><br>
+                  &rarr; <strong>Decision:</strong> <code>THROTTLE (50%)</code> | Red LED ON | Critical Overload Alarm
+                </div>
+              </div>
+
+              <div class="flow-step warning">
+                <div class="step-badge">CONDITION 2</div>
+                <div class="step-text">
+                  <strong>Station Power Exceeded:</strong> <code>power > maxStationLoadW (6000W)</code><br>
+                  &rarr; If <code>predictedDurationMin > 10</code>: <code>THROTTLE (70%)</code><br>
+                  &rarr; Else: <code>ALLOW (100%)</code> (Priority to finish nearly full EVs)
+                </div>
+              </div>
+
+              <div class="flow-step info">
+                <div class="step-badge">CONDITION 3</div>
+                <div class="step-text">
+                  <strong>Peak-Tariff Hours:</strong> <code>18:00 &ndash; 22:00</code> & Bay is <code>FREE</code><br>
+                  &rarr; If <code>arrivalProb < threshold</code>: <code>DEFER (0%)</code> (Avoid unnecessary standby draw)
+                </div>
+              </div>
+
+              <div class="flow-step success">
+                <div class="step-badge">CONDITION 4</div>
+                <div class="step-text">
+                  <strong>Normal Operation:</strong><br>
+                  &rarr; <strong>Decision:</strong> <code>ALLOW (100%)</code> | Full charging speed
+                </div>
+              </div>
+            </div>
+
+            <div class="card card-glow-orange">
+              <div class="card-icon">⚡</div>
+              <h3>Duty-Cycle Modulation Engine</h3>
+              <p>To implement throttling without complex AC dimming hardware, firmware utilizes dynamic time-slicing over a 2000ms window:</p>
+              <div class="duty-visual">
+                <div class="duty-bar">
+                  <div class="duty-on" style="width: 70%;">ON (1400ms)</div>
+                  <div class="duty-off" style="width: 30%;">OFF (600ms)</div>
+                </div>
+                <div class="duty-caption">70% Throttle Mode: Staggers peak energy demand while keeping EV battery charging active.</div>
+              </div>
+
+              <div class="override-box">
+                <strong>Manual Operator Override:</strong> Cloud operator can remotely override charger state (<code>setRelayState</code> or <code>setThrottle</code>) via ThingsBoard RPC, pausing automated optimization.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 7: THINGSBOARD IOT CLOUD INTEGRATION -->
+      <section class="slide" id="slide-7" data-title="ThingsBoard IoT Cloud Integration">
+        <div class="slide-content">
+          <div class="section-label">06 // Cloud & IoT Integration</div>
+          <h2 class="slide-heading">ThingsBoard Cloud Telemetry, Alarms & RPC</h2>
+
+          <div class="grid-3-col">
+            <div class="card">
+              <div class="card-icon">📡</div>
+              <h3>1. Telemetry Stream</h3>
+              <p>Published to <code>v1/devices/me/telemetry</code>:</p>
+              <pre class="json-preview">{
+  "bayId": "BAY1",
+  "voltage": 230.4,
+  "current": 14.8,
+  "power": 3410.0,
+  "energyWh": 420.5,
+  "temperature": 27.2,
+  "bayStatus": "CHARGING",
+  "predictedArrivalProb": 0.62,
+  "predictedDurationMin": 42,
+  "loadDecision": "ALLOW",
+  "throttleLevel": 100
+}</pre>
+            </div>
+
+            <div class="card">
+              <div class="card-icon">🎛️</div>
+              <h3>2. Shared Attributes</h3>
+              <p>Dynamic configuration without reflashing:</p>
+              <ul class="mini-list">
+                <li><code>maxStationLoadW</code> = 6000 W</li>
+                <li><code>overloadCurrentA</code> = 16.0 A</li>
+                <li><code>peakTariffStartHr</code> = 18</li>
+                <li><code>peakTariffEndHr</code> = 22</li>
+                <li><code>predictionThreshold</code> = 0.50</li>
+              </ul>
+              <div class="badge-sub">Auto-synced on boot via MQTT attributes request</div>
+            </div>
+
+            <div class="card">
+              <div class="card-icon">⚡</div>
+              <h3>3. Remote RPC & Alarms</h3>
+              <p>Bidirectional cloud control:</p>
+              <ul class="mini-list">
+                <li><strong>setRelayState:</strong> Manual ON/OFF override</li>
+                <li><strong>setThrottle:</strong> Set 0-100% power limit</li>
+                <li><strong>getStatus:</strong> Instant diagnostics</li>
+                <li><strong>Rule Chain:</strong> Raises Critical Alarm on overcurrent (> 16A) or node offline</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 8: INTERNSHIP LEARNINGS -->
+      <section class="slide" id="slide-8" data-title="Internship Learnings & Key Takeaways">
+        <div class="slide-content">
+          <div class="section-label">07 // Professional Development</div>
+          <h2 class="slide-heading">Internship Learnings & Technical Takeaways</h2>
+
+          <div class="grid-2-col">
+            <div class="card card-glow-green">
+              <div class="card-icon">🚀</div>
+              <h3>Core Technical Skills Gained</h3>
+              <ul class="feature-list">
+                <li><strong>Embedded C++ on ESP32:</strong> Mastered modular firmware design (headers, separation of concerns, non-blocking asynchronous timing with <code>millis()</code>).</li>
+                <li><strong>TinyML & Edge AI Deployment:</strong> Learned how to train machine learning models in Python (scikit-learn) and export them into standalone C arrays and decision tree algorithms for microcontrollers.</li>
+                <li><strong>IoT Messaging & Cloud Telemetry:</strong> Built robust MQTT client communication with PubSubClient, handling reconnects, JSON serialization, and RPC request dispatching.</li>
+                <li><strong>Cloud Architecture:</strong> Configured ThingsBoard dashboards, device credentials, shared attributes, and automated alarm rule chains.</li>
+              </ul>
+            </div>
+
+            <div class="card card-glow-purple">
+              <div class="card-icon">🏆</div>
+              <h3>Key Engineering Insights</h3>
+              <ul class="feature-list">
+                <li><strong>Edge vs Cloud Compute:</strong> Running inference locally ensures continuous safety and load balancing even during network drops.</li>
+                <li><strong>Constraint Optimization:</strong> Fitting ML models and MQTT buffers within ESP32 RAM requires zero-copy buffers and static memory allocation.</li>
+                <li><strong>Simulation Fidelity:</strong> Using Wokwi alongside PlatformIO provides a rapid development feedback loop for hardware verification.</li>
+                <li><strong>Industry Impact:</strong> Solves real electric vehicle infrastructure challenges for green energy and smart cities.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 9: LIVE SIMULATOR DEMONSTRATION -->
+      <section class="slide" id="slide-9" data-title="Live Working Demo (Simulator)">
+        <div class="slide-content demo-slide">
+          <div class="demo-header">
+            <div>
+              <div class="section-label">08 // Live Demonstration</div>
+              <h2 class="slide-heading">Interactive Wokwi & ThingsBoard Simulator</h2>
+            </div>
+            <div class="demo-status-pill">
+              <span class="live-pulse"></span> SYSTEM STATUS: <span id="simStatusText">ONLINE / RUNNING</span>
+            </div>
+          </div>
+
+          <!-- Simulator Container -->
+          <div class="simulator-layout">
+            <!-- Hardware Simulation Panel -->
+            <div class="sim-panel hardware-panel">
+              <div class="panel-header">
+                <h3>⚡ Simulated ESP32 Charging Bay Node</h3>
+                <span class="device-tag">BAY_01</span>
+              </div>
+
+              <!-- Interactive Controls -->
+              <div class="sim-controls-grid">
+                <!-- Plug In / Out Buttons -->
+                <div class="control-card">
+                  <div class="ctrl-label">EV Physical Connection</div>
+                  <div class="btn-group">
+                    <button id="simBtnPlugin" class="btn btn-plugin">🟢 Plug In EV (GPIO 32)</button>
+                    <button id="simBtnPlugout" class="btn btn-plugout">🔴 Plug Out EV (GPIO 33)</button>
+                  </div>
+                  <div class="bay-badge" id="simBayStateBadge">STATE: FREE</div>
+                </div>
+
+                <!-- Voltage Potentiometer Slider -->
+                <div class="control-card">
+                  <div class="ctrl-label">Voltage Sensor POT (GPIO 34): <span id="voltValDisplay">230.0 V</span></div>
+                  <input type="range" id="simVoltSlider" min="0" max="250" value="230" step="1" class="slider slider-volt">
+                  <div class="slider-ticks"><span>0 V</span><span>120 V</span><span>230 V</span><span>250 V</span></div>
+                </div>
+
+                <!-- Current Potentiometer Slider -->
+                <div class="control-card">
+                  <div class="ctrl-label">Current Sensor ACS712 POT (GPIO 35): <span id="currValDisplay">14.0 A</span></div>
+                  <input type="range" id="simCurrSlider" min="0" max="32" value="14" step="0.5" class="slider slider-curr">
+                  <div class="slider-ticks"><span>0 A</span><span>10 A</span><span class="warn-tick">16 A (Limit)</span><span>32 A</span></div>
+                </div>
+
+                <!-- DHT22 Temp Slider -->
+                <div class="control-card">
+                  <div class="ctrl-label">DHT22 Ambient Temp (GPIO 15): <span id="tempValDisplay">27.0 °C</span></div>
+                  <input type="range" id="simTempSlider" min="15" max="60" value="27" step="0.5" class="slider slider-temp">
+                  <div class="slider-ticks"><span>15 °C</span><span>27 °C</span><span>45 °C</span><span>60 °C</span></div>
+                </div>
+              </div>
+
+              <!-- Visual Actuators / LEDs & Relay -->
+              <div class="actuators-bar">
+                <div class="actuator-item">
+                  <div class="led-bulb led-green" id="simLedGreen"></div>
+                  <span>Green LED (Free)</span>
+                </div>
+                <div class="actuator-item">
+                  <div class="led-bulb led-yellow" id="simLedYellow"></div>
+                  <span>Yellow LED (Charging)</span>
+                </div>
+                <div class="actuator-item">
+                  <div class="led-bulb led-red" id="simLedRed"></div>
+                  <span>Red LED (Fault/Overload)</span>
+                </div>
+                <div class="actuator-item">
+                  <div class="relay-switch" id="simRelayVisual">
+                    <span class="relay-indicator"></span>
+                    <span class="relay-text">RELAY (GPIO 26)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ThingsBoard Dashboard Live Panel -->
+            <div class="sim-panel tb-panel">
+              <div class="panel-header">
+                <h3>📊 ThingsBoard Live Telemetry & Control</h3>
+                <span class="cloud-badge">☁️ mqtt.thingsboard.cloud</span>
+              </div>
+
+              <!-- Dashboard Widgets Grid -->
+              <div class="tb-widgets-grid">
+                <div class="tb-card">
+                  <div class="tb-title">Power Draw</div>
+                  <div class="tb-value" id="tbPowerVal">0.0 <small>W</small></div>
+                  <div class="tb-sub" id="tbEnergyVal">Energy: 0.00 Wh</div>
+                </div>
+
+                <div class="tb-card">
+                  <div class="tb-title">Edge AI Arrival Prob</div>
+                  <div class="tb-value text-cyan" id="tbArrProbVal">0.58</div>
+                  <div class="tb-sub">Commute peak window</div>
+                </div>
+
+                <div class="tb-card">
+                  <div class="tb-title">Predicted Session Duration</div>
+                  <div class="tb-value text-purple" id="tbDurVal">0 <small>min</small></div>
+                  <div class="tb-sub">DecisionTree Regression</div>
+                </div>
+
+                <div class="tb-card">
+                  <div class="tb-title">Optimizer Decision</div>
+                  <div class="tb-decision-pill pill-allow" id="tbDecisionPill">ALLOW</div>
+                  <div class="tb-sub" id="tbThrottleVal">Throttle Level: 100%</div>
+                </div>
+              </div>
+
+              <!-- Remote RPC Override Controls -->
+              <div class="rpc-controls-card">
+                <div class="rpc-title">Cloud Remote Control (ThingsBoard RPC)</div>
+                <div class="rpc-btn-group">
+                  <button id="rpcForceOnBtn" class="btn btn-sm btn-rpc">⚡ RPC: Force ON</button>
+                  <button id="rpcForceOffBtn" class="btn btn-sm btn-rpc">🛑 RPC: Force OFF</button>
+                  <button id="rpcThrottle50Btn" class="btn btn-sm btn-rpc">📉 RPC: Throttle 50%</button>
+                  <button id="rpcClearOverrideBtn" class="btn btn-sm btn-rpc-clear">🔄 Clear Override</button>
+                </div>
+                <div class="rpc-status" id="rpcStatusText">Mode: Autonomous Optimization</div>
+              </div>
+
+              <!-- Live ESP32 Serial Output Stream -->
+              <div class="serial-terminal">
+                <div class="terminal-header">
+                  <span>ESP32 Serial Monitor (115200 baud)</span>
+                  <span class="term-status">CONNECTED</span>
+                </div>
+                <div class="terminal-body" id="serialOutput"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Presentation Narrator Voice / Subtitle Drawer -->
+    <div class="narrator-bar" id="narratorBar">
+      <div class="narrator-icon">🎙️</div>
+      <div class="narrator-content">
+        <div class="narrator-title">SPEAKER NARRATION</div>
+        <div class="narrator-text" id="narratorText">Welcome to the oral presentation of our Smart EV Charging Station Optimizer. Click 'Next' or 'Start Oral Presentation' to begin.</div>
+      </div>
+      <div class="narrator-controls">
+        <button id="muteNarrationBtn" class="btn btn-sm btn-icon" title="Toggle Narration Voice">🔊 Sound ON</button>
+      </div>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
