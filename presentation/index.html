@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=3">
 </head>
 <body class="dark-theme">
   <!-- Top Bar -->
@@ -556,19 +556,43 @@
 
     </div>
 
-    <!-- Presentation Narrator Voice / Subtitle Drawer -->
+    <!-- Presentation Live Presenter Voiceover / Subtitles Drawer -->
     <div class="narrator-bar" id="narratorBar">
-      <div class="narrator-icon">🎙️</div>
-      <div class="narrator-content">
-        <div class="narrator-title">SPEAKER NARRATION</div>
-        <div class="narrator-text" id="narratorText">Welcome to the oral presentation of our Smart EV Charging Station Optimizer. Click 'Next' or 'Start Oral Presentation' to begin.</div>
+      <div class="narrator-avatar-box">
+        <div class="narrator-icon" id="narratorIcon">🎙️</div>
+        <div class="sound-wave" id="soundWave">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </div>
       </div>
+
+      <div class="narrator-content">
+        <div class="narrator-header-line">
+          <span class="narrator-badge"><span class="pulse-dot"></span> SPEAKER ORAL SCRIPT</span>
+          <span class="narrator-status" id="narratorStatus">READY</span>
+          <span class="slide-tag" id="narratorSlideTag">SLIDE 1 OF 9</span>
+        </div>
+        <div class="narrator-text-wrapper">
+          <span class="quote-mark">“</span>
+          <div class="narrator-text" id="narratorText">Welcome to the technical internship presentation on the Smart EV Charging Station Optimizer. In this project, we designed and simulated an intelligent multi-bay charging node using ESP32, Edge AI, MQTT, and ThingsBoard IoT cloud.</div>
+          <span class="quote-mark">”</span>
+        </div>
+      </div>
+
       <div class="narrator-controls">
-        <button id="muteNarrationBtn" class="btn btn-sm btn-icon" title="Toggle Narration Voice">🔊 Sound ON</button>
+        <div class="kb-shortcuts-hint">
+          <span><kbd>Space</kbd> Play/Pause</span>
+          <span><kbd>→</kbd> Next</span>
+        </div>
+        <button id="muteNarrationBtn" class="btn btn-sm btn-audio-toggle" title="Toggle Narration Voice">
+          <span class="audio-icon" id="muteBtnIcon">🔊</span> <span id="muteBtnLabel">Voice ON</span>
+        </button>
       </div>
     </div>
   </main>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=3"></script>
 </body>
 </html>

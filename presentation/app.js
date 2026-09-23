@@ -10,8 +10,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const totalSlides = slides.length;
   let currentSlideIndex = 0;
   let isAutoPlaying = false;
-  let autoPlayTimer = null;
   let isMuted = false;
+  let slideAdvanceTimeout = null;
+  let keepAliveInterval = null;
+  let selectedVoice = null;
 
   const narrations = [
     "Welcome to the technical internship presentation on the Smart EV Charging Station Optimizer. In this project, we designed and simulated an intelligent multi-bay charging node using ESP32, Edge AI, MQTT, and ThingsBoard IoT cloud.",
@@ -31,13 +33,51 @@ document.addEventListener("DOMContentLoaded", () => {
   const currentSlideNum = document.getElementById("currentSlideNum");
   const totalSlidesNum = document.getElementById("totalSlidesNum");
   const narratorText = document.getElementById("narratorText");
+  const narratorStatus = document.getElementById("narratorStatus");
+  const narratorSlideTag = document.getElementById("narratorSlideTag");
+  const soundWave = document.getElementById("soundWave");
   const muteNarrationBtn = document.getElementById("muteNarrationBtn");
+  const muteBtnIcon = document.getElementById("muteBtnIcon");
+  const muteBtnLabel = document.getElementById("muteBtnLabel");
 
   totalSlidesNum.textContent = totalSlides;
 
-  // Speech Synthesis & Auto-Play Controller
-  let currentUtterance = null;
-  let slideAdvanceTimeout = null;
+  // -------------------------------------------------------------------
+  // Robust Speech Synthesis Engine (Voice Loader & Keepalive)
+  // -------------------------------------------------------------------
+  function initVoices() {
+    if (!("speechSynthesis" in window)) return;
+    const voices = window.speechSynthesis.getVoices();
+    if (voices.length > 0) {
+      // Find best English voice (prefer Natural, US/GB, or standard)
+      selectedVoice = voices.find(v => (v.name.includes("Natural") || v.name.includes("Google") || v.name.includes("Jenny") || v.name.includes("David")) && v.lang.startsWith("en")) 
+                   || voices.find(v => v.lang.startsWith("en")) 
+                   || voices[0];
+    }
+  }
+
+  if ("speechSynthesis" in window) {
+    initVoices();
+    window.speechSynthesis.onvoiceschanged = initVoices;
+  }
+
+  // Chrome Bug Keepalive (prevents SpeechSynthesis from pausing on long text)
+  function startSpeechKeepAlive() {
+    clearInterval(keepAliveInterval);
+    keepAliveInterval = setInterval(() => {
+      if ("speechSynthesis" in window && window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
+        window.speechSynthesis.pause();
+        window.speechSynthesis.resume();
+      }
+    }, 6000);
+  }
+
+  function stopSpeechKeepAlive() {
+    clearInterval(keepAliveInterval);
+  }
+
+  // Active utterance reference to prevent JS Garbage Collection bug
+  window._activeUtterance = null;
 
   function showSlide(index, autoAdvanceAfterSpeech = false) {
     if (index < 0) index = 0;
@@ -52,22 +92,29 @@ document.addEventListener("DOMContentLoaded", () => {
     prevBtn.disabled = currentSlideIndex === 0;
     nextBtn.disabled = currentSlideIndex === totalSlides - 1;
 
-    // Update Narration & Speech
+    // Update Narration Text & Slide Counter
     const text = narrations[currentSlideIndex] || "";
     narratorText.textContent = text;
+    if (narratorSlideTag) {
+      narratorSlideTag.textContent = `SLIDE ${currentSlideIndex + 1} OF ${totalSlides}`;
+    }
     
     speakNarration(text, () => {
-      // Called when speech finishes
+      // Callback fired when speech completes
+      if (soundWave) soundWave.classList.remove("speaking");
+      if (narratorStatus && !isMuted) {
+        narratorStatus.textContent = isAutoPlaying ? "TRANSITIONING..." : "COMPLETED";
+        narratorStatus.className = "narrator-status";
+      }
+
       if (isAutoPlaying && autoAdvanceAfterSpeech) {
         if (currentSlideIndex < totalSlides - 1) {
-          // Pause 1.5 seconds after audio finishes before advancing to next slide
           slideAdvanceTimeout = setTimeout(() => {
             if (isAutoPlaying) {
               showSlide(currentSlideIndex + 1, true);
             }
           }, 1500);
         } else {
-          // Reached end of presentation
           stopAutoPlay();
         }
       }
@@ -76,37 +123,66 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function speakNarration(text, onComplete) {
     clearTimeout(slideAdvanceTimeout);
-    
+    stopSpeechKeepAlive();
+
     if ("speechSynthesis" in window) {
-      window.speechSynthesis.cancel(); // Stop previous audio
+      window.speechSynthesis.cancel();
     }
 
     if (isMuted || !("speechSynthesis" in window)) {
-      // Fallback timer based on reading speed (~3.5 words per sec)
+      if (soundWave) soundWave.classList.remove("speaking");
+      if (narratorStatus) {
+        narratorStatus.textContent = isMuted ? "MUTED" : "READY";
+        narratorStatus.className = isMuted ? "narrator-status status-muted" : "narrator-status";
+      }
+
       if (onComplete) {
         const words = text.split(" ").length;
-        const fallbackDurationMs = Math.max(4000, (words / 3.2) * 1000);
-        slideAdvanceTimeout = setTimeout(() => {
-          onComplete();
-        }, fallbackDurationMs);
+        const fallbackMs = Math.max(4000, (words / 3.0) * 1000);
+        slideAdvanceTimeout = setTimeout(onComplete, fallbackMs);
       }
       return;
+    }
+
+    // Ensure voices are ready
+    if (!selectedVoice && "speechSynthesis" in window) {
+      initVoices();
     }
 
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.rate = 1.0;
     utterance.pitch = 1.0;
-    currentUtterance = utterance;
+    if (selectedVoice) {
+      utterance.voice = selectedVoice;
+    }
+    window._activeUtterance = utterance;
+
+    utterance.onstart = () => {
+      startSpeechKeepAlive();
+      if (soundWave) soundWave.classList.add("speaking");
+      if (narratorStatus) {
+        narratorStatus.textContent = "SPEAKING";
+        narratorStatus.className = "narrator-status";
+      }
+    };
 
     utterance.onend = () => {
+      stopSpeechKeepAlive();
+      window._activeUtterance = null;
+      if (soundWave) soundWave.classList.remove("speaking");
       if (onComplete) onComplete();
     };
 
     utterance.onerror = (e) => {
-      console.warn("Speech error or cancelled:", e);
+      stopSpeechKeepAlive();
+      window._activeUtterance = null;
+      if (soundWave) soundWave.classList.remove("speaking");
+      console.warn("[Speech Engine] Event error/cancel:", e);
       if (onComplete) onComplete();
     };
 
+    // Unlock browser audio context & speak
+    window.speechSynthesis.resume();
     window.speechSynthesis.speak(utterance);
   }
 
@@ -128,7 +204,6 @@ document.addEventListener("DOMContentLoaded", () => {
       stopAutoPlay();
       showSlide(currentSlideIndex + 1, false);
     } else if (e.key === " ") {
-      // Spacebar toggles play/pause
       e.preventDefault();
       toggleAutoPlay();
     }
@@ -136,9 +211,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
   muteNarrationBtn.addEventListener("click", () => {
     isMuted = !isMuted;
-    muteNarrationBtn.textContent = isMuted ? "🔇 Sound OFF" : "🔊 Sound ON";
+    muteNarrationBtn.classList.toggle("muted", isMuted);
+    if (muteBtnIcon) muteBtnIcon.textContent = isMuted ? "🔇" : "🔊";
+    if (muteBtnLabel) muteBtnLabel.textContent = isMuted ? "Voice OFF" : "Voice ON";
+
     if (isMuted && "speechSynthesis" in window) {
       window.speechSynthesis.cancel();
+      stopSpeechKeepAlive();
+      if (soundWave) soundWave.classList.remove("speaking");
+      if (narratorStatus) {
+        narratorStatus.textContent = "MUTED";
+        narratorStatus.className = "narrator-status status-muted";
+      }
     } else if (!isMuted) {
       speakNarration(narrations[currentSlideIndex], null);
     }
@@ -148,16 +232,25 @@ document.addEventListener("DOMContentLoaded", () => {
     isAutoPlaying = true;
     autoPlayBtn.textContent = "⏸️ Pause Presentation";
     autoPlayBtn.classList.replace("btn-primary", "btn-secondary");
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.resume();
+    }
     showSlide(currentSlideIndex, true);
   }
 
   function stopAutoPlay() {
     isAutoPlaying = false;
     clearTimeout(slideAdvanceTimeout);
+    stopSpeechKeepAlive();
     if ("speechSynthesis" in window) {
       window.speechSynthesis.cancel();
     }
-    autoPlayBtn.textContent = currentSlideIndex >= totalSlides - 1 
+    if (soundWave) soundWave.classList.remove("speaking");
+    if (narratorStatus && !isMuted) {
+      narratorStatus.textContent = "PAUSED";
+      narratorStatus.className = "narrator-status status-paused";
+    }
+    autoPlayBtn.textContent = (currentSlideIndex >= totalSlides - 1) 
       ? "🎙️ Restart Oral Presentation" 
       : "▶️ Resume Oral Presentation";
     autoPlayBtn.classList.replace("btn-secondary", "btn-primary");
@@ -178,7 +271,7 @@ document.addEventListener("DOMContentLoaded", () => {
     toggleAutoPlay();
   });
 
-  // Initialize first slide on load (audio does not auto-advance until user clicks start)
+  // Initialize first slide on load
   showSlide(0, false);
 
   // -------------------------------------------------------------------
