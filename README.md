@@ -33,7 +33,6 @@ Modular C++ codebase with PlatformIO build toolchain and live Wokwi terminal:
 ## 🎬 Oral Presentation & Video Walkthrough
 
 - 🌐 **Live Interactive Presentation & Simulator App:** [https://kaushal-saini.github.io/smart-edge-ai-based-ev-charging-optimizer/](https://kaushal-saini.github.io/smart-edge-ai-based-ev-charging-optimizer/)
-- 📹 **Recorded MP4 Video File:** Available in the repository as [`presentation_video.mp4`](./presentation_video.mp4) (ready to upload/view on YouTube).
 
 ---
 
