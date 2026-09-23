@@ -30,3 +30,5 @@ env/
 Thumbs.db
 *.tmp
 *.log
+*.mp4
+*.webp
