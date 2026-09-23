@@ -1,8 +1,32 @@
 # Smart EV Charging Station Optimizer (Edge AI + IoT)
 
-A smart, multi-bay Electric Vehicle (EV) charging station optimizer powered by **ESP32**, **Embedded Edge AI inference**, **MQTT**, and **ThingsBoard**.
+An intelligent, multi-bay Electric Vehicle (EV) charging station optimizer powered by **ESP32**, **Embedded Edge AI inference**, **MQTT**, and **ThingsBoard**.
 
 This system autonomously monitors charging bay electrical parameters, predicts short-term EV arrival demand and session duration on-device, optimizes charger allocation/throttling to prevent power grid overloads and reduce peak-tariff costs, and connects seamlessly to ThingsBoard for real-time monitoring, telemetry logging, alarms, and remote RPC control.
+
+---
+
+## 📸 Working Model Simulation & Hardware Structure (`Diagram.json`)
+
+### 1. Live Running Wokwi Simulator & Serial Telemetry Stream
+The simulated ESP32 charging node running inside Wokwi with dual ADC potentiometers, DHT22 sensor, pushbuttons, status LEDs, power relay, and live serial telemetry:
+
+![Wokwi Simulator Running](assets/wokwi_simulation_running.png)
+
+### 2. Hardware Circuit Schematic & Wiring Pinout
+Detailed connection map between ESP32 DevKit and all peripherals:
+
+![Wokwi Simulation Circuit Diagram](assets/circuit_layout.png)
+
+### 3. Real-Time ThingsBoard Cloud Dashboard & Simulator
+Live telemetry gauges, Edge AI arrival predictions, remaining duration regression, and ThingsBoard RPC controls:
+
+![Live Simulator Dashboard](assets/live_simulator_dashboard.png)
+
+### 4. VS Code PlatformIO Development Environment
+Modular C++ codebase with PlatformIO build toolchain and live Wokwi terminal:
+
+![VS Code PlatformIO Wokwi Environment](assets/wokwi_vscode_full_ide.png)
 
 ---
 
@@ -10,20 +34,6 @@ This system autonomously monitors charging bay electrical parameters, predicts s
 
 - 🌐 **Live Interactive Presentation & Simulator App:** [https://kaushal-saini.github.io/smart-edge-ai-based-ev-charging-optimizer/](https://kaushal-saini.github.io/smart-edge-ai-based-ev-charging-optimizer/)
 - 📹 **Recorded MP4 Video File:** Available in the repository as [`presentation_video.mp4`](./presentation_video.mp4) (ready to upload/view on YouTube).
-
----
-
-## 🖼️ Working Model Structure & Simulation Circuit
-
-### 1. Hardware Circuit Schematic (`Diagram.json`)
-The simulated hardware circuit connects the ESP32 to analog sensors, push buttons, status indicators, and the charger relay:
-
-![Wokwi Simulation Circuit Diagram](assets/circuit_layout.png)
-
-### 2. Live Interactive Simulator & ThingsBoard Dashboard
-Real-time hardware control panel and cloud telemetry synchronization:
-
-![Live Simulator Dashboard](assets/live_simulator_dashboard.png)
 
 ---
 
@@ -180,8 +190,10 @@ smart-edge-ai-based-ev-charging-optimizer/
 ├── README.md                  # Project documentation & screenshots
 ├── index.html                 # Root redirect for GitHub Pages deployment
 ├── assets/                    # Circuit schematics and simulator screenshots
+│   ├── wokwi_simulation_running.png
 │   ├── circuit_layout.png
-│   └── live_simulator_dashboard.png
+│   ├── live_simulator_dashboard.png
+│   └── wokwi_vscode_full_ide.png
 ├── presentation/              # Interactive Presentation Slide Deck Web App
 │   ├── index.html
 │   ├── style.css
